@@ -1,0 +1,160 @@
+<!--
+ Webcomponents to manage table
+ @version v0.0.1 - 2015-12-07
+ @link https://github.com/gigigo-html5/gig-table
+ @author Pedro José Peña Jerez <pedro.jose@gigigo.com>
+ @license MIT License, http://www.opensource.org/licenses/MIT
+ -->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../juicy-html/juicy-html.html">
+<link rel="stylesheet" href="../components-font-awesome/css/font-awesome.css">
+<script src="tablesort.js"></script>
+
+<dom-module id="gig-table">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        ::content gig-th, ::content gig-tr {
+            display: none;
+        }
+
+        .table > table {
+            color: #76838f;
+            width: 100%;
+            border-spacing: 0;
+            border-color: 0;
+            border-collapse: inherit;
+        }
+
+        .table th, .table td {
+            border-bottom: 1px solid #e4eaec;
+            padding: 8px;
+            line-height: 1.57142857;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .table th {
+            color: #526069;
+            font-weight: 400;
+            position: relative;
+        }
+
+        .table table.sortable th {
+            cursor: pointer;
+        }
+
+        .table table.sortable th:after {
+            font-family: 'FontAwesome';
+            position: absolute;
+            top: 11px;
+            right: 7px;
+            display: block;
+            content: '\f0dc';
+            opacity: .5;
+            font-size: 13px;
+        }
+
+        .table table.sortable th.sort-up:after {
+            content: "\f0d8";
+        }
+
+        .table table.sortable th.sort-down:after {
+            content: "\f0d7";
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: rgba(243,247,249,.3)
+        }
+
+        .table tbody tr:hover {
+            background-color: #f3f7f9;
+        }
+
+    </style>
+
+    <template>
+        <content select="gig-th" id="th"></content>
+        <content select="gig-tr" id="tr"></content>
+
+        <div class="table">
+            <table id="table" class$="[[_getClassTable]]">
+                <thead>
+                    <tr>
+                    <template is="dom-repeat" items="{{headItems}}" on-dom-change="readyTemplate">
+                        <th>{{item.innerHTML}}</th>
+                    </template>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template is="dom-repeat" as="tr" items="{{trItems}}">
+                        <tr>
+                            <template is="dom-repeat" as="td" items="[[_getArray(tr.children)]]">
+                                <td><template is="juicy-html" content$="{{td.html}}"></template></td>
+                            </template>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+    <script>
+        (function() {
+
+
+            Polymer({
+                is: 'gig-table',
+                ready: function() {
+                    this.headItems = Polymer.dom(this.$.th).getDistributedNodes();
+                    this.trItems = Polymer.dom(this.$.tr).getDistributedNodes();
+                },
+                readyTemplate: function() {
+
+                    if (this.sortable) {
+                        this.table = new Tablesort(this.$.table, {
+                            descending: true
+                        });
+                    }
+                },
+                _getArray: function(elements) {
+                    var array = []
+                    for (var i = 0; i < elements.length; i++) {
+                        var object = {
+                            html: elements[i].innerHTML
+                        }
+
+                        array.push(object)
+                    }
+
+                    return array;
+                },
+                _getClassTable: function() {
+
+                    var classTable;
+
+                    if (this.sortable) {
+                        classTable = 'sortable ';
+                    }
+
+                    return classTable;
+
+                },
+                refresh: function() {
+                    this.table.refresh();
+                },
+                properties: {
+                    sortable: {
+                        type: Boolean
+                    }
+                }
+            })
+        })();
+    </script>
+
+</dom-module>

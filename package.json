@@ -4,7 +4,8 @@
   "description": "Webcomponents to manage table",
   "main": "gruntfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "./node_modules/.bin/grunt release"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "devDependencies": {
     "bower": "*",
     "grunt": ">=0.4.0",
+    "grunt-cli": "^0.1.13",
     "grunt-contrib-concat": "*",
     "grunt-contrib-jshint": "*",
     "grunt-conventional-changelog": "0.0.12",
