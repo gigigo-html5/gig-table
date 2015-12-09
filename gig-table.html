@@ -1,6 +1,6 @@
 <!--
  Webcomponents to manage table
- @version v0.0.1 - 2015-12-07
+ @version v0.0.1 - 2015-12-09
  @link https://github.com/gigigo-html5/gig-table
  @author Pedro José Peña Jerez <pedro.jose@gigigo.com>
  @license MIT License, http://www.opensource.org/licenses/MIT
@@ -47,6 +47,7 @@
 
         .table table.sortable th {
             cursor: pointer;
+            padding-right: 18px;
         }
 
         .table table.sortable th:after {
@@ -60,12 +61,24 @@
             font-size: 13px;
         }
 
+        .table table.sortable th.sort-up, .table table.sortable th.sort-down {
+            font-weight: bold;
+        }
+
         .table table.sortable th.sort-up:after {
             content: "\f0d8";
         }
 
         .table table.sortable th.sort-down:after {
             content: "\f0d7";
+        }
+
+        .table table.sortable th.no-sort {
+            cursor: default;
+        }
+
+        .table table.sortable th.no-sort:after {
+            content: "";
         }
 
         .table tbody tr:nth-child(odd) {
@@ -83,11 +96,11 @@
         <content select="gig-tr" id="tr"></content>
 
         <div class="table">
-            <table id="table" class$="[[_getClassTable]]">
+            <table id="table" class$="[[getClassTable(sortable)]]">
                 <thead>
                     <tr>
                     <template is="dom-repeat" items="{{headItems}}" on-dom-change="readyTemplate">
-                        <th>{{item.innerHTML}}</th>
+                        <th class$="[[getClassTh(item)]]" width$="[[getAttr(item, 'width')]]">{{item.innerHTML}}</th>
                     </template>
                     </tr>
                 </thead>
@@ -95,7 +108,7 @@
                     <template is="dom-repeat" as="tr" items="{{trItems}}">
                         <tr>
                             <template is="dom-repeat" as="td" items="[[_getArray(tr.children)]]">
-                                <td><template is="juicy-html" content$="{{td.html}}"></template></td>
+                                <td class$="[[getClassTd(td.className)]]"><template is="juicy-html" content$="{{td.html}}"></template></td>
                             </template>
                         </tr>
                     </template>
@@ -118,15 +131,23 @@
 
                     if (this.sortable) {
                         this.table = new Tablesort(this.$.table, {
-                            descending: true
+                            descending: this._getTypeOrder()
                         });
+                    }
+                },
+                _getTypeOrder: function() {
+                    if (this.sortable === 'descending') {
+                        return true;
+                    } else {
+                        return false;
                     }
                 },
                 _getArray: function(elements) {
                     var array = []
                     for (var i = 0; i < elements.length; i++) {
                         var object = {
-                            html: elements[i].innerHTML
+                            html: elements[i].innerHTML,
+                            className: elements[i].className
                         }
 
                         array.push(object)
@@ -134,8 +155,28 @@
 
                     return array;
                 },
-                _getClassTable: function() {
+                getAttr: function(item, attribute) {
+                    return item.getAttribute(attribute);
+                },
+                getClassTd: function(className) {
+                    return className;
+                },
+                getClassTh : function(item) {
+                    var className = '';
+                    if (item.attributes.length > 0) {
+                        for (var i = 0; i < item.attributes.length; i++) {
+                            if (item.attributes[i].name === 'sort-default') {
+                                className += 'sort-default ';
+                            }
+                            if (item.attributes[i].name === 'no-sort') {
+                                className += 'no-sort ';
+                            }
+                        }
+                    }
 
+                    return className;
+                },
+                getClassTable: function(sortable) {
                     var classTable;
 
                     if (this.sortable) {
@@ -150,7 +191,8 @@
                 },
                 properties: {
                     sortable: {
-                        type: Boolean
+                        type: Boolean,
+                        default: false
                     }
                 }
             })
