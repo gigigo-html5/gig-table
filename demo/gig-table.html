@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/juicy-html/juicy-html.html">
+<link rel="import" href="../bower_components/marked-element/marked-element.html">
 <link rel="stylesheet" href="../bower_components/components-font-awesome/css/font-awesome.css">
 <script src="../src/tablesort.js"></script>
 
@@ -82,6 +83,10 @@
             background-color: #f3f7f9;
         }
 
+        .markdown-html p {
+            padding: 0; margin: 0;
+        }
+
     </style>
 
     <template>
@@ -101,7 +106,7 @@
                     <template is="dom-repeat" as="tr" items="{{trItems}}">
                         <tr>
                             <template is="dom-repeat" as="td" items="[[_getArray(tr.children)]]">
-                                <td class$="[[getClassTd(td.className)]]"><template is="juicy-html" content$="{{td.html}}"></template></td>
+                                <td class$="[[getClassTd(td.className)]]"><marked-element markdown="{{td.html}}"><div class="markdown-html"></div></marked-element></td>
                             </template>
                         </tr>
                     </template>
