@@ -1,15 +1,15 @@
 <!--
  Webcomponents to manage table
- @version v0.0.2 - 2015-12-10
+ @version v0.0.3 - 2015-12-10
  @link https://github.com/gigigo-html5/gig-table
  @author Pedro José Peña Jerez <pedro.jose@gigigo.com>
  @license MIT License, http://www.opensource.org/licenses/MIT
  -->
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../juicy-html/juicy-html.html">
-<link rel="import" href="../marked-element/marked-element.html">
 <link rel="stylesheet" href="../components-font-awesome/css/font-awesome.css">
 <script src="tablesort.js"></script>
+
 
 <dom-module id="gig-table">
 
@@ -90,10 +90,6 @@
             background-color: #f3f7f9;
         }
 
-        .markdown-html p {
-            padding: 0; margin: 0;
-        }
-
     </style>
 
     <template>
@@ -113,7 +109,7 @@
                     <template is="dom-repeat" as="tr" items="{{trItems}}">
                         <tr>
                             <template is="dom-repeat" as="td" items="[[_getArray(tr.children)]]">
-                                <td class$="[[getClassTd(td.className)]]"><marked-element markdown="{{td.html}}"><div class="markdown-html"></div></marked-element></td>
+                                <td class$="[[getClassTd(td.className)]]"><template is="juicy-html" content$="{{td.html}}"></template></td>
                             </template>
                         </tr>
                     </template>

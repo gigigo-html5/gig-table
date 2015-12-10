@@ -1,6 +1,6 @@
 {
   "name": "gig-table",
-  "version": "0.0.3",
+  "version": "0.0.2",
   "homepage": "https://github.com/gigigo-html5/gig-table",
   "authors": [
     "Pedro Peña <pedro.jose@gigigo.com>"
@@ -14,8 +14,8 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "~1.0.9",
+    "polymer": "~1.2.0",
     "components-font-awesome": "~4.4.0",
-    "marked-element": "PolymerElements/marked-element#~1.1.1"
+    "juicy-html": "~1.0.1"
   }
 }
